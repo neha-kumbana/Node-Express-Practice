@@ -1,20 +1,19 @@
 const express = require('express')
-const path = require('path')
-
 const app = express()
 
-//setup static and middleware
-app.use(express.static('./public'))   
+const peopleRouter = require('./routes/people')
+const routerLogin = require('./routes/auth')
 
-// app.get('/',(req,res) => {
-//     res.sendFile(path.resolve(__dirname,'./navbar-app/index.html'))
-//  u can just add the index.html file to public folder and not have this app.get('/') function and still works
-//  SSR
-// })
+//static assets
+app.use(express.static('./methods-public'))
+//parse form data
+app.use(express.urlencoded({extended: false}))
+//parse json
+app.use(express.json())
 
-app.all('*',(req,res) => {
-    res.status(404).send('<h1>Page not found</h1>')
-})
+app.use('/login',routerLogin)
+
+app.use('/api/people',peopleRouter)
 
 app.listen(5000,() => {
     console.log('Server is listening on port 5000');
